@@ -6,6 +6,10 @@
 *.pdf
 *.zip
 
+## except to ignore
+!/data/*
+
+
 ###########################################
 ############ General Setttings ############
 ###########################################
@@ -19,6 +23,7 @@
 *.tif
 *.tiff
 *.gif
+*.webp
 
 # Model file related
 *.h5
