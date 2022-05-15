@@ -80,22 +80,24 @@ class ImgTools:
         return pil2cv2
 
     @staticmethod
-    def cv2_img_list_save_gif(gif_list, save_file_name, interval_sec=150):
+    def cv2_img_list_save_gif(gif_list, save_file_name, frame_rate=30):
         """
         將cv2的圖片清單儲存成gif檔案
         :param gif_list: cv2圖片清單
         :param save_file_name: 儲存檔名
-        :param interval_sec: 每張圖間格秒數
+        :param frame_rate: 每秒顯示多少幀(多少張數圖片)
         :return: 回傳檔案路徑 final_path
         """
         folder_dir = "./data"  # 儲存的資料夾
         if not os.path.exists(folder_dir):
             os.makedirs(folder_dir)
         final_path = os.path.join(folder_dir, save_file_name)  # 最終檔案儲存路徑
-
         output = []
+        interval_sec = 1000 // frame_rate
         for img in gif_list:
             img = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))  # 轉換成 PIL 格式(同時BGR轉RGB讓顯色與cv2呈現出來相同)
             output.append(img)  # 加入 output
+        # duration 將每幀的顯示時間設置為duration以毫秒為單位。如果值太小，將被忽略。
+        # duration 最小值只能設到20，等於幀數最高設置為50，若超過該限制，會變成預設間隔時間為100
         output[0].save(final_path, save_all=True, append_images=output[1:], loop=0, duration=interval_sec, disposal=0)
         return final_path

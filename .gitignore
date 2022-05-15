@@ -1,16 +1,4 @@
 ###########################################
-############ Project Specific ############
-###########################################
-## folders to ignore
-
-*.pdf
-*.zip
-
-## except to ignore
-!/data/*
-
-
-###########################################
 ############ General Setttings ############
 ###########################################
 # Video / Image related
@@ -24,6 +12,7 @@
 *.tiff
 *.gif
 *.webp
+
 
 # Model file related
 *.h5
@@ -171,3 +160,14 @@ dmypy.json
 # Pyre type checker
 .pyre/
 *.swo
+
+###########################################
+############ Project Specific ############
+###########################################
+## folders to ignore
+
+*.pdf
+*.zip
+
+## except to ignore
+!/data/*

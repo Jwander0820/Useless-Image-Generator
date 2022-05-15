@@ -25,8 +25,12 @@ if __name__ == '__main__':
     #                                           step=25,
     #                                           save_gif_name="300x300_full_range_random_number_map.gif")
 
+    # 3. y_flow_random_map；類似The Matrix駭客任務風格背景
+    # GenerateDigitalMap.y_flow_random_map(example_shape,
+    #                                      save_gif_name="300x300_y_flow_random_map.gif")
+
     # main()
 
-    path = "./data/300x300_full_range_random_number_map.gif"
-    ImgTools.read_and_show_gif(path, frame_rate=10)
+    path = "./data/300x300_y_flow_random_map.gif"
+    ImgTools.read_and_show_gif(path, frame_rate=60)
 
