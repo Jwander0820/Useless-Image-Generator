@@ -1,36 +1,31 @@
-import cv2
-import numpy as np
-import random
-from PIL import Image, ImageSequence
-from utils.img_tools import ImgTools
-from utils.generator_data import *
-from core.generate_digital_map import GenerateDigitalMap
-
-
-def main():
-    img_shape1080 = (1920, 1080)
-    img_shape720 = (1280, 720)
-    GenerateDigitalMap.random_number_map()
-
+from utils.gif_tools import GifTools
+from core.generate_digital_map_gif import GenerateDigitalMapGif
+from core.generate_dvd_bounce_gif import GenerateDVDBounceGif
 
 if __name__ == '__main__':
-    # Example
-    example_shape = (300, 300)
-    # 1. random_number_map
-    # GenerateDigitalMap.random_number_map(example_shape,
-    #                                      numbers_of_numbers=100,
-    #                                      save_gif_name="300x300_same_range_random_number_map.gif")
-    # 2. full_random_number_map
-    # GenerateDigitalMap.full_random_number_map(example_shape,
-    #                                           step=25,
-    #                                           save_gif_name="300x300_full_range_random_number_map.gif")
-
-    # 3. y_flow_random_map；類似The Matrix駭客任務風格背景
-    # GenerateDigitalMap.y_flow_random_map(example_shape,
-    #                                      save_gif_name="300x300_y_flow_random_map.gif")
-
-    # main()
-
+    # Notice : if you use show_gif function, you need to press "blank key" to leave windows
+    # 注意 : 如果您使用show_gif功能，您需要按“空白鍵”離開視窗
+    # 0. 顯示GIF圖像
     path = "./data/300x300_y_flow_random_map.gif"
-    ImgTools.read_and_show_gif(path, frame_rate=60)
+    GifTools.read_and_show_gif(path, frame_rate=60)
 
+    # Example GIF
+    example_shape = (300, 300)
+
+    # 1. random_number_map；生成隨機座標隨機數字圖像
+    gif_list = GenerateDigitalMapGif.random_number_map(example_shape, numbers_of_numbers=100)
+    GifTools.show_gif(gif_list, frame_rate=10)  # 顯示生成的GIF圖片
+    # 儲存圖片則調用下面此行，以下為示範，其後不示範儲存圖像，設定檔名.gif，檔案將儲存在/data資料夾下 (若要儲存圖片，不建議顯示圖片，會占用大量記憶體==)
+    # GifTools.cv2_img_list_save_gif(gif_list, "300x300_same_range_random_number_map.gif", frame_rate=10)
+
+    # 2. full_random_number_map；生成全區域隨機數字圖像
+    gif_list = GenerateDigitalMapGif.full_random_number_map(example_shape, word_distance=25)
+    GifTools.show_gif(gif_list, frame_rate=10)
+
+    # 3. y_flow_random_map；生成類似The Matrix(駭客任務)風格背景
+    gif_list = GenerateDigitalMapGif.y_flow_random_map(example_shape, gif_sec=3)
+    GifTools.show_gif(gif_list, frame_rate=60)
+
+    # 4. dvd_bounce_by_random_color；生成類似DVD反彈螢幕保護程式
+    gif_list = GenerateDVDBounceGif.dvd_bounce_by_random_color(example_shape, gif_sec=10)
+    GifTools.show_gif(gif_list, frame_rate=100)
