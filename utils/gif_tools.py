@@ -7,18 +7,19 @@ from PIL import ImageSequence
 
 class GifTools:
     @staticmethod
-    def generate_frame(img_shape, frame, gif_sec):
+    def generate_frame(img_shape, frame, gif_sec, background=(0, 0, 0)):
         """
         生成gif圖像的單張圖片，指定圖像尺寸大小、幀數、秒數
         :param img_shape: 欲生成的圖像大小
         :param frame: 幀數
         :param gif_sec: 秒數
+        :param background: 背景顏色
         :return: 單張圖片清單
         """
         # frame*sec等於gif圖所需的所有張數，後許可使用1 sec. N frame來讀取
         gif_list = []
         for i in range(frame * gif_sec):  # 生成所有幀
-            mask = np.full(img_shape, (0, 0, 0), dtype=np.uint8)  # 生成蒙版
+            mask = np.full(img_shape, background, dtype=np.uint8)  # 生成蒙版
             gif_list.append(mask)
         return gif_list
 

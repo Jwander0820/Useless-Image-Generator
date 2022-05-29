@@ -23,7 +23,8 @@ class GenerateDVDBounceGif:
 
         for frame in gif_list:  # 在每幀間繪圖
             old_vector = vector  # 紀錄前一幀的向量，用於處理顏色反轉
-            location, vector = MoveTextByVector.vector_setting(img_shape, start_point=location, vector=vector)
+            location, vector = MoveTextByVector.vector_setting(img_shape, start_point=location, vector=vector,
+                                                               bounce_setting=True)
             color = MoveTextByVector.color_setting(color, vector, old_vector)  # 若兩幀間向量不同，隨機骰新的顏色
             cv2.putText(frame, "DVD", location, cv2.FONT_HERSHEY_DUPLEX,
                         1, color, 1, cv2.LINE_AA)
@@ -31,5 +32,6 @@ class GenerateDVDBounceGif:
 
 
 if __name__ == "__main__":
+    # Done
     _gif_list = GenerateDVDBounceGif.dvd_bounce_by_random_color(img_shape=(300, 300))
     GifTools.show_gif(_gif_list, frame_rate=100)

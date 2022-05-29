@@ -134,5 +134,3 @@ if __name__ == '__main__':
 
     _gif_list = GenerateDigitalMapGif.y_flow_random_map(example_shape)
     GifTools.show_gif(_gif_list, frame_rate=60)
-
-    # Develop
