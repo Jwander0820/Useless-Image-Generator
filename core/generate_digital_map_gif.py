@@ -7,11 +7,12 @@ from utils.move_text_by_straight_flow import MoveText
 
 class GenerateDigitalMapGif:
     @staticmethod
-    def random_number_map(img_shape=(1280, 720), numbers_of_numbers=1000):
+    def random_number_map(img_shape=(1280, 720), numbers_of_numbers=1000, few_frame_transform=1):
         """
         生成隨機位置的隨機數字圖，黑底白數字
         :param img_shape:輸出的GIF圖像大小 預設為(1280,720)
         :param numbers_of_numbers:生成多少個隨機數字
+        :param few_frame_transform:幾幀變換一次數字圖像，預設為1，每幀都會變換，數字越大代表每次變換數字的時間間隔越長
         :return:回傳GIF清單
         """
         width, height = img_shape
@@ -20,25 +21,29 @@ class GenerateDigitalMapGif:
 
         gif_list = []
         for frame in range(30):
-            mask = np.full(gif_img_shape, (0, 0, 0), dtype=np.uint8)  # 生成蒙版
-            location_list = []
-            for i in range(numbers_of_numbers):  # 隨機填入1000(default)個數字
-                # location = GenerateRandomLocation.generate_range_random_num(width, height)  # 全隨機生成寬高區間內的座標
-                location = GenerateRandomParam.generate_same_range_random_num(
-                    width, height, step=25)
-                if location not in location_list:   # 若座標沒有重複，加入清單，並繪製隨機數字於圖像上
-                    location_list.append(location)
-                    cv2.putText(mask, random.choice(text_list), location, cv2.FONT_HERSHEY_DUPLEX,
-                                1, (255, 255, 255), 2, cv2.LINE_AA)
-            gif_list.append(mask)
+            if frame % few_frame_transform == 0:
+                mask = np.full(gif_img_shape, (0, 0, 0), dtype=np.uint8)  # 生成蒙版
+                location_list = []
+                for i in range(numbers_of_numbers):  # 隨機填入1000(default)個數字
+                    # location = GenerateRandomLocation.generate_range_random_num(width, height)  # 全隨機生成寬高區間內的座標
+                    location = GenerateRandomParam.generate_same_range_random_num(
+                        width, height, step=25)
+                    if location not in location_list:   # 若座標沒有重複，加入清單，並繪製隨機數字於圖像上
+                        location_list.append(location)
+                        cv2.putText(mask, random.choice(text_list), location, cv2.FONT_HERSHEY_DUPLEX,
+                                    1, (255, 255, 255), 2, cv2.LINE_AA)
+                gif_list.append(mask)
+            else:
+                gif_list.append(mask)
         return gif_list
 
     @staticmethod
-    def full_random_number_map(img_shape=(1280, 720), word_distance=25):
+    def full_random_number_map(img_shape=(1280, 720), word_distance=25, few_frame_transform=1):
         """
         生成填滿區塊的隨機數字圖，黑底白數字。數字大小倍率為1粗度為2的建議步伐為25，步伐越小填充的數字越密，計算時間越長
         :param img_shape:輸出的GIF圖像大小 預設為(1280,720)
         :param word_distance: 文字間隔
+        :param few_frame_transform:幾幀變換一次數字圖像，預設為1，每幀都會變換，數字越大代表每次變換數字的時間間隔越長
         :return:回傳GIF清單
         """
         width, height = img_shape
@@ -47,13 +52,16 @@ class GenerateDigitalMapGif:
 
         gif_list = []
         for frame in range(30):
-            mask = np.full(gif_img_shape, (0, 0, 0), dtype=np.uint8)  # 生成蒙版
-            for i in range(0, width+word_distance, word_distance):
-                for j in range(0, height+word_distance, word_distance):
-                    location = (i, j)
-                    cv2.putText(mask, random.choice(text_list), location, cv2.FONT_HERSHEY_DUPLEX,
-                                1, (255, 255, 255), 2, cv2.LINE_AA)
-            gif_list.append(mask)
+            if frame % few_frame_transform == 0:  # 餘數等於0時變換數字圖像 (ex 設為5，表示第0、5、10幀會生成新的數字圖像)
+                mask = np.full(gif_img_shape, (0, 0, 0), dtype=np.uint8)  # 生成蒙版
+                for i in range(0, width+word_distance, word_distance):
+                    for j in range(0, height+word_distance, word_distance):
+                        location = (i, j)
+                        cv2.putText(mask, random.choice(text_list), location, cv2.FONT_HERSHEY_DUPLEX,
+                                    1, (255, 255, 255), 2, cv2.LINE_AA)
+                gif_list.append(mask)
+            else:
+                gif_list.append(mask)
         return gif_list
 
     @staticmethod

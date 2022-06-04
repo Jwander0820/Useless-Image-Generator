@@ -26,3 +26,7 @@
 ### 5. 數學幻想(?)，思考時背後運算的數學特效
 `math_fantasy`
 <div><img src=data/300x300_math_fantasy.gif></div>
+
+### 6. 數位文字圖像，大文字由隨機不斷變換的小數字構成，亦可以替換成自己的剪影(蒙版)
+`digital_text_mask`
+<div><img src=data/300x300_digital_text_mask.gif></div>
