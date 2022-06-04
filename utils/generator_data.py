@@ -43,6 +43,21 @@ class GenerateRandomParam:
             output_string.append(tmp_choose)
         return output_string
 
+    @staticmethod
+    def rt_random_location_vector(img_shape):
+        width, height = img_shape
+        # 限制生成的座標在內部小方框內
+        width_split = width // 4
+        height_split = height // 4
+        x = random.randint(width_split*1, width_split*3)
+        y = random.randint(height_split*1, height_split*3)
+        location = (x, y)
+        random_vector_list = [-3, -2, -1, 0, 1, 2, 3]
+        vector_x = random.choice(random_vector_list)
+        vector_y = random.choice(random_vector_list)
+        vector = (vector_x, vector_y)
+        return location, vector
+
 
 if __name__ == '__main__':
     # Done

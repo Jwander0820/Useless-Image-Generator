@@ -1,6 +1,8 @@
 from utils.gif_tools import GifTools
 from core.generate_digital_map_gif import GenerateDigitalMapGif
 from core.generate_dvd_bounce_gif import GenerateDVDBounceGif
+from core.generate_math_fantasy import GenerateMathFantasyGif
+
 
 if __name__ == '__main__':
     # Notice : if you use show_gif function, you need to press "blank key" to leave windows
@@ -29,3 +31,7 @@ if __name__ == '__main__':
     # 4. dvd_bounce_by_random_color；生成類似DVD反彈螢幕保護程式
     gif_list = GenerateDVDBounceGif.dvd_bounce_by_random_color(example_shape, gif_sec=10)
     GifTools.show_gif(gif_list, frame_rate=100)
+
+    # 5. math_fantasy；數學幻想(?)，思考時背後運算的數學特效
+    gif_list = GenerateMathFantasyGif.math_fantasy(img_shape=example_shape, gif_sec=2)
+    GifTools.show_gif(gif_list, frame_rate=60)

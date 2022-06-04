@@ -22,3 +22,7 @@
 ### 4. 生成類似DVD反彈螢幕保護程式
 `dvd_bounce_by_random_color`
 <div><img src=data/300x300_DVD_bounce.gif></div>
+
+### 5. 數學幻想(?)，思考時背後運算的數學特效
+`dvd_bounce_by_random_color`
+<div><img src=data/300x300_math_fantasy.gif></div>

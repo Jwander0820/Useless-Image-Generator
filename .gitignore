@@ -172,3 +172,4 @@ dmypy.json
 ## except to ignore
 !/data/*
 !/database/*
+!/database/equation/*
