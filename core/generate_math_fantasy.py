@@ -47,7 +47,7 @@ class GenerateMathFantasyGif:
             for i in range(len(equation_img_list)):
                 # 圖片清單內 結合隨機座標和向量做繪圖
                 frame, location_list[i] = MoveTextByVector.draw_img_in_frame(
-                    img_shape, location_list[i], vector_list[i], frame, equation_img_list[i],
+                    frame, location_list[i], vector_list[i], equation_img_list[i],
                     init_size=0.1, resize_refresh=resize_refresh)
             resize_refresh += 0.002
             # 黑白顛倒取反色

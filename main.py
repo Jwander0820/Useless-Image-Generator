@@ -29,8 +29,9 @@ if __name__ == '__main__':
     GifTools.show_gif(gif_list, frame_rate=60)
 
     # 4. dvd_bounce_by_random_color；生成類似DVD反彈螢幕保護程式
-    gif_list = GenerateDVDBounceGif.dvd_bounce_by_random_color(example_shape, gif_sec=10)
-    GifTools.show_gif(gif_list, frame_rate=100)
+    # gif_list = GenerateDVDBounceGif.dvd_bounce_by_random_color(example_shape, gif_sec=10)  # 舊版本；純文字版
+    gif_list = GenerateDVDBounceGif.dvd_bounce_with_img(example_shape, gif_sec=10)  # 新版本；圖片碰撞版本
+    GifTools.show_gif(gif_list, frame_rate=50)
 
     # 5. math_fantasy；數學幻想(?)，思考時背後運算的數學特效
     gif_list = GenerateMathFantasyGif.math_fantasy(img_shape=example_shape, gif_sec=2)

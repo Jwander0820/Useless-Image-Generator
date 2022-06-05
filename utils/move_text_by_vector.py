@@ -4,61 +4,79 @@ import cv2
 
 class MoveTextByVector:
     @staticmethod
-    def vector_setting(img_shape, start_point=(0, 0), vector=(1, 2), bounce_setting=False):
+    def vector_setting(frame, start_point=(0, 0), vector=(1, 2), paste_img=(0, 0, 0),
+                       bounce_setting=False, random_factor=False):
         """
-        設定物件移動向量
-        :param img_shape: 圖片尺寸大小(用於計算邊界相關處理)
+        設定物件移動向量，函數內部可以設定是否要再變換方向時添加隨機向量!
+        :param frame: 圖片尺寸大小(用於計算邊界相關處理)
         :param start_point: 物件每幀起始點
         :param vector: 移動向量
-        :param bounce_setting:設定物件是否反彈
+        :param paste_img:欲貼上的圖片(需與bounce_setting連動)
+        :param bounce_setting:設定物件是否反彈(只看左上座標，不看貼圖邊界)
+        :param random_factor: 隨機向量因子；碰到四邊界時向量反轉，並在沒有反轉的向量添加隨機因子(讓每次碰撞時可能不是全反彈)
         :return: 新的座標以及向量
         """
         # 解析變數
-        # width, height = img_shape
+        # frame_height, frame_width, frame_channel = frame.shape
         start_x, start_y = start_point
         vector_x, vector_y = vector
 
-        end_x = start_x + vector_x  # x座標+x向量=x新座標
-        end_y = start_y + vector_y  # y座標+y向量=y新座標
-        location = (end_x, end_y)
+        new_start_x = start_x + vector_x  # x座標+x向量=x新座標
+        new_start_y = start_y + vector_y  # y座標+y向量=y新座標
+        location = (new_start_x, new_start_y)
         if bounce_setting:
             # 回傳新向量，若物件的座標超出框線將其向量反轉，若不執行下面的操作，物件會直接飛出邊界(不同的效果)
-            new_vector = MoveTextByVector.bounce_setting(img_shape, location, vector)
+            new_vector = MoveTextByVector.bounce_setting(frame, paste_img, location, vector, random_factor=random_factor)
             return location, new_vector
         else:
             return location, vector
 
     @staticmethod
-    def bounce_setting(img_shape, location, vector):
+    def bounce_setting(frame, paste_img, location, vector, random_factor=False):
         """
         反彈設定(僅改變方向)
-        :param img_shape: 圖片尺寸大小(用於計算邊界相關處理)
+        :param frame: 圖片尺寸大小(用於計算邊界相關處理)
+        :param paste_img:欲貼上的圖片(需與bounce_setting連動)
         :param location: 物件座標
         :param vector: 移動向量
+        :param random_factor: 隨機向量因子；碰到四邊界時向量反轉，並在沒有反轉的向量添加隨機因子(讓每次碰撞時可能不是全反彈)
         :return:
         """
         # 解析變數
-        width, height = img_shape
-        end_x, end_y = location
+        frame_height, frame_width, frame_channel = frame.shape
+        try:
+            img_height, img_width, img_channel = paste_img.shape  # 貼圖的寬高通道數，先嘗試解析，解析失敗則使用(0,0,0)
+        except AttributeError:  # AttributeError: 'tuple' object has no attribute 'shape'
+            img_height, img_width, img_channel = (0, 0, 0)  # 預設為tuple型態，不能讀取.shape形狀，因此令為0，如此不影響不輸入圖片時的函數
+
+        new_start_x, new_start_y = location  # 提取初始左上座標
+        new_end_x = new_start_x + img_width  # 計算貼圖的右下座標x
+        new_end_y = new_start_y + img_height  # 計算貼圖的右下座標y
+
         vector_x, vector_y = vector
+        new_vector = vector  # 複製一份原始向量，用於後續若有變換向量時的隨機因子計算
+        random_vector_factor = 0  # default=0
+        if random_factor:  # 碰到四邊界時向量反轉，並在沒有反轉的向量添加隨機因子(每次碰撞時可能不是全反彈)
+            random_vector_factor = random.randint(-1, 1)
         # 若碰到邊界，將向量反轉
-        if end_x > width and end_y > height:
-            vector = (-vector_x, -vector_y)  # 若x,y越過 右下角界線
-        elif end_x > width and end_y < 0:
-            vector = (-vector_x, -vector_y)  # 若x,y越過 右上角界線
-        elif end_x < 0 and end_y < 0:
-            vector = (-vector_x, -vector_y)  # 若x,y越過 左上角界線
-        elif end_x < 0 and end_y > height:
-            vector = (-vector_x, -vector_y)  # 若x,y越過 左下角界線
-        elif end_x > width:
-            vector = (-vector_x, vector_y)  # 若x越過 右邊界線
-        elif end_x < 0:
-            vector = (-vector_x, vector_y)  # 若x越過 左邊界線
-        elif end_y > height:
-            vector = (vector_x, -vector_y)  # 若y越過 下邊界線
-        elif end_y < 0:
-            vector = (vector_x, -vector_y)  # 若y越過 上邊界線
-        return vector
+        if new_end_x > frame_width and new_end_y > frame_height:
+            new_vector = (-vector_x, -vector_y)  # 若paste_img右下角碰到 右下角界線
+        elif new_end_x > frame_width and new_start_y < 0:
+            new_vector = (-vector_x, -vector_y)  # 若paste_img右上角碰到 右上角界線
+        elif new_start_x < 0 and new_start_y < 0:
+            new_vector = (-vector_x, -vector_y)  # 若paste_img左上角碰到 左上角界線
+        elif new_start_x < 0 and new_end_y > frame_height:
+            new_vector = (-vector_x, -vector_y)  # 若paste_img左下角碰到 左下角界線
+        elif new_end_x > frame_width:
+            new_vector = (-vector_x, vector_y + random_vector_factor)  # 若paste_img右邊界碰到 右邊界線
+        elif new_start_x < 0:
+            new_vector = (-vector_x, vector_y + random_vector_factor)  # 若paste_img左邊界碰到 左邊界線
+        elif new_end_y > frame_height:
+            new_vector = (vector_x + random_vector_factor, -vector_y)  # 若paste_img下邊界碰到 下邊界線
+        elif new_start_y < 0:
+            new_vector = (vector_x + random_vector_factor, -vector_y)  # 若paste_img上邊界碰到 上邊界線
+
+        return new_vector
 
     @staticmethod
     def color_setting(color, new_vector, old_vector):
@@ -79,19 +97,18 @@ class MoveTextByVector:
             return color
 
     @staticmethod
-    def draw_img_in_frame(img_shape, location, vector, frame, img, init_size=0.1, resize_refresh=0):
+    def draw_img_in_frame(frame, location, vector, img, init_size=0.1, resize_refresh=0):
         """
         集成的物件，輸出的GIF圖像大小，每次更新的座標，固定向量，底圖，欲貼上的圖
-        :param img_shape: 輸出的GIF圖像大小
+        :param frame: 底圖
         :param location: 每次更新的座標
         :param vector: 固定向量
-        :param frame: 底圖
         :param img: 欲貼上的圖
         :param init_size: 貼圖初始大小
         :param resize_refresh: 更新resize大小的參數
         :return: frame更新後的底圖 location更新後的座標
         """
-        location, vector = MoveTextByVector.vector_setting(img_shape, start_point=location, vector=vector)
+        location, vector = MoveTextByVector.vector_setting(frame, start_point=location, vector=vector)
         whether_to_draw = MoveTextByVector.according_location_decide_draw(frame, img, location)
         if whether_to_draw:
             img_resize = cv2.resize(img, dsize=None, fx=init_size + resize_refresh, fy=init_size + resize_refresh)

@@ -9,6 +9,7 @@ class GenerateDigitalTextGif:
     def digital_text_mask(img_shape=(1280, 720), few_frame_transform=2):
         """
         數位文字圖像，大文字由隨機不斷變換的小數字構成，亦可以替換成自己的剪影(蒙版)
+        # 有趣實用的更新；超採樣:將數字底圖放大一定倍數之後，在resize回指定較小的尺寸，如此便可以得到較高精度的"小"數字底圖
         :param img_shape: 輸出的GIF圖像大小 預設為(1280,720)
         :param few_frame_transform: 幾幀變換一次數字圖像，預設為2，每幀都會變換，數字越大代表每次變換數字的時間間隔越長
         :return:
