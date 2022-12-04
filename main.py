@@ -3,6 +3,7 @@ from core.generate_digital_map_gif import GenerateDigitalMapGif
 from core.generate_dvd_bounce_gif import GenerateDVDBounceGif
 from core.generate_math_fantasy import GenerateMathFantasyGif
 from core.generate_digital_text_mask import GenerateDigitalTextGif
+from core.generate_marquee import GenerateMarquee
 
 if __name__ == '__main__':
     # Notice : if you use show_gif function, you need to press "blank key" to leave windows
@@ -40,3 +41,8 @@ if __name__ == '__main__':
     # 6. digital_text_mask；數位文字圖像，大文字由隨機不斷變換的小數字構成，亦可以替換成自己的剪影(蒙版)
     gif_list = GenerateDigitalTextGif.digital_text_mask(img_shape=(300, 300), few_frame_transform=2)
     GifTools.show_gif(gif_list, frame_rate=30)
+
+    # 7. marquee；文字跑馬燈，類似新聞播報的文字跑馬燈效果，可以設定方向、文字大小與顏色、背景顏色、移動速度等
+    _test_text = "這是一串測試用的中文字，English test, 123"
+    gif_list = GenerateMarquee.text_flow(_test_text)
+    GifTools.show_gif(gif_list, frame_rate=60)

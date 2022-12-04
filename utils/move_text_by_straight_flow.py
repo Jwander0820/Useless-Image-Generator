@@ -73,7 +73,6 @@ class MoveText:
 
         gif_list = GifTools.generate_frame(gif_img_shape, frame=60, gif_sec=5)  # 生成多少張資料
         n = 0  # 迴圈計數器，若字串超過界線，回到起點重新跑
-        word_size = word_size
         for i in range(len(gif_list)):
             mask = gif_list[i]
             # word_distance*(-choose_num) 為起始座標；move_step*i 為每幀移動步伐；
